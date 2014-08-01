@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"/>
 <title>Trie</title>
 </head>
 
 <body>
-Creates a trie.
+<p id="paragraph">Creates a trie in the future.</p>
+
+<input id="userInput" type="text" />
+<input id="button" type="submit" value="Create trie" onClick="addToTrie()" />
+<script>
+
+function addToTrie(){
+	document.getElementById("paragraph").innerHTML = "Button pressed."; //change this
+
+	var word = document.getElementById("userInput").value;
+	console.log(word);
+
+	var finalTrie = new trie(word);
+	console.log(finalTrie);
+
+	var root = new node("a", null);
+	console.log(root);
+	//get first char and make a node
+}
+
+function trie(word){
+	this.root = new node(word.charAt(0), word.substring(1, word.length));
+	//foreach edge, 
+}
+
+function node(character, edges){
+	this.character = character;
+	this.edges = edges;
+}
+
+</script>
 </body>
 
 </html>
