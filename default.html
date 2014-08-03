@@ -9,32 +9,92 @@
 <p id="paragraph">Creates a trie in the future.</p>
 
 <input id="userInput" type="text" />
-<input id="button" type="submit" value="Create trie" onClick="addToTrie()" />
-<script>
+<input id="button" type="submit" value="Create trie" onClick="processWord()" />
 
-function addToTrie(){
+<p id="trie">trie goes here</p>
+<script>
+var trie = new Trie();
+
+//global trie
+function processWord(){
 	document.getElementById("paragraph").innerHTML = "Button pressed."; //change this
 
 	var word = document.getElementById("userInput").value;
 	console.log(word);
 
-	var finalTrie = new trie(word);
-	console.log(finalTrie);
+	console.log(trie.root);
+	console.log(word);
 
-	var root = new node("a", null);
-	console.log(root);
-	//get first char and make a node
+	trie.addToTrie(trie.root, word);
+
+	console.log(trie);
+	document.getElementById("trie").innerHTML = trie;
 }
 
-function trie(word){
-	this.root = new node(word.charAt(0), word.substring(1, word.length));
-	//foreach edge, 
+function Trie(){
+	this.root = new Node("#", null);
 }
 
-function node(character, edges){
+Trie.prototype.addToTrie = function(currentNode, word){
+
+	if(word.length == 0){
+		return;
+	}
+	if(currentNode.hasLink(word.charAt(0))){
+		//follow link, try again on substring
+		addToTrie(currentNode.nextNode(word.charAt(0), word.substring(1, word.length)));
+	}
+	else{
+		console.log(word.charAt(0));
+		currentNode.addRest(word);
+		//don't need to check again bc we know this new added node does not have any links
+	}
+};
+
+function Node(character, edges){
 	this.character = character;
-	this.edges = edges;
+	this.edges = [];
+	if(edges == null){
+		return;
+	}
+	for(var i = 0; i < edges.length; i++){
+		this.edges.push(edges[i]);
+	}
 }
+
+Node.prototype.nextNode = function(character) {
+	//get the next node with the specified character
+	for(var i = 0; i < this.edges.length; i++){
+		if(this.edges[i].character == character){
+			return this.edges[i];
+		}
+	}
+};
+
+Node.prototype.addRest = function(word) {
+	//add the rest of the word as a chain
+	//todo - reference currentNode via this.
+	if(this == null){
+		return;
+	}
+	if(word.length == 1){
+		this.edges.push(new Node(word.charAt(0), null));
+	}
+	else{
+		this.edges.push(new Node(word.charAt(0), null));
+		this.nextNode(word.charAt(0)).addRest(word.substring(1, word.length));
+	}
+};
+
+Node.prototype.hasLink = function(character) {
+	//iterate through the nodes links and see if it has a node for this character
+	for(var i = 0; i < this.edges.length; i++){
+		if(this.edges[i].character == character){
+			return true;
+		}
+	}
+	return false;
+};
 
 </script>
 </body>
