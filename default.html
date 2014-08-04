@@ -11,20 +11,24 @@
 <input id="userInput" type="text" />
 <input id="button" type="submit" value="Create trie" onClick="processWord()" />
 
-<p id="trie">trie goes here</p>
+<table>
+<thead id="trie">
+</thead>
+</table>
 <script>
 var trie = new Trie();
 
-//global trie
 function processWord(){
-	document.getElementById("paragraph").innerHTML = "Button pressed."; //change this
+	document.getElementById("paragraph").innerHTML = "Button pressed.";
+	document.getElementById("trie").innerHTML = "";
 
 	var word = document.getElementById("userInput").value;
 
 	trie.addToTrie(trie.root, word);
 
 	console.log(trie);
-	document.getElementById("trie").innerHTML = "Check console to view trie";
+
+	trie.displayTrie();
 }
 
 function Trie(){
@@ -51,6 +55,28 @@ Trie.prototype.addToTrie = function(currentNode, word){
 	}
 };
 
+Trie.prototype.displayTrie = function(){
+//need formatting
+	var table= document.getElementById("trie");
+	//for each layer of the trie, add a new row
+	//bfs
+	var row = table.insertRow();
+	displayTrieHelper(trie.root, row, -1);
+};
+
+function displayTrieHelper(node, row, depth) {
+	if(node.edges == null){
+		return;
+	}
+	for(var i = 0; i < node.edges.length; i++){
+		var cell = row.insertCell(i);
+		cell.innerHTML = node.edges[i].character;
+		var table = document.getElementById("trie");
+		var nextRow = table.insertRow(depth);
+		displayTrieHelper(node.edges[i], nextRow, depth);
+	}
+}
+
 function Node(character, edges){
 	this.character = character;
 	this.edges = [];
@@ -73,7 +99,6 @@ Node.prototype.nextNode = function(character) {
 
 Node.prototype.addRest = function(word) {
 	//add the rest of the word as a chain
-	//todo - reference currentNode via this.
 	if(this == null){
 		return;
 	}
