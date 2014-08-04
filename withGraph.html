@@ -17,9 +17,7 @@
 <input id="userInput" type="text" />
 <input id="button" type="submit" value="Create trie" onClick="processWord()" />
 
-
 <div id="canvas"></div>
-<button id="redraw" onclick="redraw();">redraw</button>
 
 <table>
 <thead id="trie">
@@ -30,7 +28,7 @@
 var graph = new Graph();
 var trie = new Trie();
     var width = $(document).width() - 200;
-    var height = $(document).height() - 250;
+    var height = $(document).height() - 300;
 	var renderer = new Graph.Renderer.Raphael('canvas', graph, width, height);
 	var layouter = new Graph.Layout.Spring(graph);
 
@@ -40,8 +38,7 @@ var trie = new Trie();
     };
 
 function processWord(){
-	document.getElementById("paragraph").innerHTML = "Button pressed.";
-
+	document.getElementById("trie").innerHTML = "";
 	var word = document.getElementById("userInput").value;
 
 	trie.addToTrie(trie.root, word);
@@ -50,6 +47,7 @@ function processWord(){
 
 	trie.displayTrie();
 	trie.transformToGraph();
+	redraw();
 }
 
 function Trie(){
