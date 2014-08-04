@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <title>Trie</title>
+    <script type="text/javascript" src="js/raphael-min.js"></script>
+    <script type="text/javascript" src="js/dracula_graffle.js"></script>
+    <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="js/dracula_graph.js"></script>
 </head>
 
 <body>
@@ -20,11 +24,21 @@
 </thead>
 </table>
 <script>
+
+var graph = new Graph();
 var trie = new Trie();
+    var width = $(document).width() - 20;
+    var height = $(document).height() - 60;
+	var renderer = new Graph.Renderer.Raphael('canvas', graph, width, height);
+	var layouter = new Graph.Layout.Spring(graph);
+
+    redraw = function() {
+        layouter.layout();
+        renderer.draw();
+    };
 
 function processWord(){
 	document.getElementById("paragraph").innerHTML = "Button pressed.";
-	document.getElementById("trie").innerHTML = "";
 
 	var word = document.getElementById("userInput").value;
 
@@ -33,13 +47,15 @@ function processWord(){
 	console.log(trie);
 
 	trie.displayTrie();
+	trie.transformToGraph();
 }
 
 function Trie(){
 	this.root = new Node("#", null);
+	graph.addNode("#");
 }
 
-Trie.prototype.addToTrie = function(currentNode, word){
+Trie.prototype.addToTrie = function(currentNode, word) {
 	console.log(word);
 	if(word == null){
 		return;
@@ -47,6 +63,8 @@ Trie.prototype.addToTrie = function(currentNode, word){
 	if(word.length == 0){
 		return;
 	}
+
+
 	if(currentNode.hasLink(word.charAt(0))){
 		//follow link, try again on substring
 		console.log(word);
@@ -56,6 +74,22 @@ Trie.prototype.addToTrie = function(currentNode, word){
 	else{
 		currentNode.addRest(word);
 		//don't need to check again bc we know this new added node does not have any links
+	}
+};
+
+Trie.prototype.transformToGraph = function(){
+	trie.transformToGraphHelper(trie.root);
+};
+
+Trie.prototype.transformToGraphHelper = function(node){
+	if(node.edges == null){
+		return;
+	}
+	graph.addNode(node.character);
+	for(var i = 0; i < node.edges.length; i++){
+		graph.addNode(node.edges[i].character);
+		graph.addEdge(node.character, node.edges[i].character);
+		trie.transformToGraphHelper(node.nextNode(node.edges[i].character));
 	}
 };
 
