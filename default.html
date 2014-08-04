@@ -20,10 +20,6 @@ function processWord(){
 	document.getElementById("paragraph").innerHTML = "Button pressed."; //change this
 
 	var word = document.getElementById("userInput").value;
-	console.log(word);
-
-	console.log(trie.root);
-	console.log(word);
 
 	trie.addToTrie(trie.root, word);
 
@@ -36,16 +32,20 @@ function Trie(){
 }
 
 Trie.prototype.addToTrie = function(currentNode, word){
-
+	console.log(word);
+	if(word == null){
+		return;
+	}
 	if(word.length == 0){
 		return;
 	}
 	if(currentNode.hasLink(word.charAt(0))){
 		//follow link, try again on substring
-		addToTrie(currentNode.nextNode(word.charAt(0), word.substring(1, word.length)));
+		console.log(word);
+		console.log("substring is " + word.substring(1, word.length));
+		trie.addToTrie(currentNode.nextNode(word.charAt(0)), word.substring(1, word.length));
 	}
 	else{
-		console.log(word.charAt(0));
 		currentNode.addRest(word);
 		//don't need to check again bc we know this new added node does not have any links
 	}
