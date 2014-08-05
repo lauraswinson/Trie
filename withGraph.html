@@ -2,6 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8"/>
+<meta name="author" content="Laura Swinson">
+<meta name="description" content="A trie data structure.">
 <title>Trie</title>
     <script type="text/javascript" src="js/raphael-min.js"></script>
     <script type="text/javascript" src="js/dracula_graffle.js"></script>
@@ -28,7 +30,7 @@
 var graph = new Graph();
 var trie = new Trie();
     var width = $(document).width() - 200;
-    var height = $(document).height() - 300;
+    var height = $(document).height() - 200;
 	var renderer = new Graph.Renderer.Raphael('canvas', graph, width, height);
 	var layouter = new Graph.Layout.Spring(graph);
 
